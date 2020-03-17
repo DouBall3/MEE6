@@ -7,7 +7,7 @@ class ChatService:
     _chat_service = None
 
     def __init__(self):
-        account = ServiceAccountCredentials.from_json_keyfile_name(conf['credentials_file'], "https://www.googleapis.com/auth/chat.bot")
+        account = ServiceAccountCredentials.from_json_keyfile_name('chatac.json', "https://www.googleapis.com/auth/chat.bot")
         self._chat_service = build('chat', 'v1', http=account.authorize(Http()))
 
     def spaces(self):
@@ -20,6 +20,13 @@ class ChatService:
         messages = self._chat_service.spaces().messages()
         response = messages.create(
             parent=parent,
-            body={'text': user + ping}
+            body={'text': '<'+user+'>' + ' ' + ping}
+        ).execute()
+        return response
+    def message(self, parent, message):
+        messages = self._chat_service.spaces().messages()
+        response = messages.create(
+            parent=parent,
+            body={'text': message}
         ).execute()
         return response
